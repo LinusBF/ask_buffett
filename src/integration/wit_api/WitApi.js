@@ -13,8 +13,12 @@ class WitApi{
         });
     }
 
-    getResponse(query){
-        return query + " answer";
+    getResponse(query, callback){
+        this.client.message(query, {})
+            .then((data) => {
+                callback(data.entities.intent[0].value, JSON.stringify(data))
+            })
+            .catch(console.error);
     }
 }
 

@@ -16,7 +16,10 @@ class ChatContainer extends Component{
             ],
             inputs: [
             ],
-        }
+        };
+
+        this.handleInput = this.handleInput.bind(this);
+        this.addResponse = this.addResponse.bind(this);
     }
 
     addInput(query){
@@ -27,18 +30,19 @@ class ChatContainer extends Component{
         });
     }
 
-    addResponse(response){
+    addResponse(response, json_data){
+        console.log(response);
         var newResponse = this.state.responses;
         newResponse.push({date: new Date(), message: response});
         this.setState({
             responses: newResponse
         });
+        console.log(json_data);
     }
 
     handleInput(query){
-        const response = this.props.witApi.getResponse(query);
+        this.props.witApi.getResponse(query, this.addResponse);
         this.addInput(query);
-        this.addResponse(response);
     }
 
     orderMessages(){
