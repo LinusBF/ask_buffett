@@ -30,18 +30,16 @@ class ChatContainer extends Component{
         });
     }
 
-    addResponse(response, json_data){
-        console.log(response);
+    addResponse(response){
         var newResponse = this.state.responses;
         newResponse.push({date: new Date(), message: response});
         this.setState({
             responses: newResponse
         });
-        console.log(json_data);
     }
 
     handleInput(query){
-        this.props.witApi.getResponse(query, this.addResponse);
+        this.props.marketApi.getResponse(query, this.addResponse);
         this.addInput(query);
     }
 
