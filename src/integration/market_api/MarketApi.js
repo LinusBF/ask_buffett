@@ -18,14 +18,19 @@ export default class MarketApi{
         this.witApi.getWitResponse(query, this.handleWitResponse.bind(this, callback))
     }
 
-    handleWitResponse(callback, response){
+    handleWitResponse(registerResponse, witResponse){
         //TODO - use fetcher to get answer
-        var stocks = this.getStockTickets(response.entities.search_query[0].value);
+        console.log(witResponse.entities.intent[0].value);
+        if(witResponse.entities.intent[0].value === "stock_information_get"){
+            this._handleStockPrice(registerResponse, witResponse);
+        }
+    }
+
+    _handleStockPrice(registerResponse, witResponse){
+        var stocks = this.getStockTickets(witResponse.entities.search_query[0].value);
         var symbols = [];
         stocks.forEach((stock) => symbols.push(stock.symbol));
-        var price = this.currentFetcher.getStockPrice(symbols);
-
-        callback(symbol + " latest value per stock was: " + price);
+        this.currentFetcher.getStockPrice(symbols, registerResponse);
     }
 
     getStockTickets(stockName){
