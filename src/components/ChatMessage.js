@@ -9,8 +9,12 @@ export default ChatMessage;
 function ChatMessage(props) {
     return(
         <div className="chat-message">
-            <p className="message-time">{ props.messageData.date.toISOString().slice(11,19) }:</p>
-            <p className="message-text">{ props.messageData.message }</p>
+            <div className="message-time">
+                { props.messageData.date.toISOString().slice(11,19) }:
+            </div>
+            <div className={(props.messageData.userContent ? "user-input" : "bot-message") + " message-text"}>
+                { props.messageData.message }
+            </div>
         </div>
     );
 }

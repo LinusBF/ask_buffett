@@ -12,7 +12,7 @@ class ChatContainer extends Component{
 
         this.state = {
             responses: [
-                {date: new Date(), message:"Ask the bot something!"},
+                {date: new Date(), message:"Ask the bot something!", userContent: false},
             ],
             inputs: [
             ],
@@ -24,7 +24,7 @@ class ChatContainer extends Component{
 
     addInput(query){
         var newInputs = this.state.inputs;
-        newInputs.push({date: new Date(), message: query});
+        newInputs.push({date: new Date(), message: query, userContent: true});
         this.setState({
             inputs: newInputs
         });
@@ -32,7 +32,7 @@ class ChatContainer extends Component{
 
     addResponse(response){
         var newResponse = this.state.responses;
-        newResponse.push({date: new Date(), message: response});
+        newResponse.push({date: new Date(), message: response, userContent: false});
         this.setState({
             responses: newResponse
         });
