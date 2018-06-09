@@ -5,5 +5,8 @@
  */
 
 const WitApiKey = "INPOUNG75GIYI6YG4PGZMY24M7YTGPIX";
+const WtdApiKey = "Di6mgwpv8Oqvo3nfAUnADOSNreH0eks33QvVHGE59310aPmONkAxzA0U1sPP";
 
-export default WitApiKey;
+const Secrets = {Wit: WitApiKey, Wtd: WtdApiKey};
+
+export default Secrets;
