@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import {fetchResponse, addResponse, addInput} from "../actions/index"
+import {fetchResponse, addInput} from "../actions/index"
 import ChatInput from "../components/ChatInput";
 import ChatMessage from "../components/ChatMessage";
 

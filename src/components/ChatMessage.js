@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import { parseIntent } from "./IntentParser";
 
 const ChatMessage = (props) => {
     console.log(props);
@@ -17,8 +18,9 @@ const ChatMessage = (props) => {
         message = data.content;
     } else{
         //Calc message from intent
+        message = parseIntent(data.content);
     }
-    console.log(message);
+
     return(
         <div className="chat-message">
             <div className="message-time">

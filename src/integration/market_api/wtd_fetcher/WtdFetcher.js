@@ -2,7 +2,6 @@
  * Created by Linus on 2018-06-08.
  */
 
-import WtdMessages from "./WtdMessages";
 const queryString = require("query-string");
 
 class WtdFetcher{

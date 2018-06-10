@@ -3,8 +3,6 @@ import logo from '../logo.svg';
 import './App.css';
 
 import ChatContainer from "./ChatContainer";
-import MarketApi from "../integration/market_api/MarketApi";
-import Secrets from "../utils/secrets";
 
 class App extends Component {
     render() {
