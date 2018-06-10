@@ -3,50 +3,22 @@
  */
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
+import {fetchResponse, addResponse, addInput} from "../actions/index"
 import ChatInput from "../components/ChatInput";
 import ChatMessage from "../components/ChatMessage";
 
 class ChatContainer extends Component{
     constructor(props){
         super(props);
-
-        this.state = {
-            responses: [
-                {date: new Date(), message:"Ask the bot something!", userContent: false},
-            ],
-            inputs: [
-            ],
-        };
-
+        this.defaultMsg = <ChatMessage messageData={{content: "Ask Buffett something!", date: new Date(), userContent: false}} />;
         this.handleInput = this.handleInput.bind(this);
-        this.addResponse = this.addResponse.bind(this);
-    }
-
-    addInput(query){
-        var newInputs = this.state.inputs;
-        newInputs.push({date: new Date(), message: query, userContent: true});
-        this.setState({
-            inputs: newInputs
-        });
-    }
-
-    addResponse(response){
-        var newResponse = this.state.responses;
-        newResponse.push({date: new Date(), message: response, userContent: false});
-        this.setState({
-            responses: newResponse
-        });
-    }
-
-    handleInput(query){
-        this.props.marketApi.getResponse(query, this.addResponse);
-        this.addInput(query);
     }
 
     orderMessages(){
-        var responses = this.state.responses.slice();
+        var responses = this.props.responses.slice();
         responses.sort((a, b) => b.date.getTime() < a.date.getTime());
-        var inputs = this.state.inputs.slice();
+        var inputs = this.props.inputs.slice();
         inputs.sort((a, b) => b.date.getTime() < a.date.getTime());
 
         var messageIndex = 0;
@@ -69,9 +41,15 @@ class ChatContainer extends Component{
 
         return(
             <React.Fragment>
+                {this.defaultMsg}
                 {messages}
             </React.Fragment>
         );
+    }
+
+    handleInput(query){
+        this.props.fetchResponse(query);
+        this.props.addInput(query);
     }
 
     render() {
@@ -81,11 +59,24 @@ class ChatContainer extends Component{
                     {this.orderMessages()}
                 </div>
                 <div className="chat-input-container">
-                    <ChatInput sendInput={this.handleInput.bind(this)} />
+                    <ChatInput sendInput={this.handleInput} />
                 </div>
             </div>
         );
     }
 }
 
-export default ChatContainer;
+const mapStateToProps = state => ({
+    responses: state.responses,
+    inputs: state.inputs
+})
+
+const mapDispatchToProps = dispatch => ({
+    addInput: query => dispatch(addInput(query)),
+    fetchResponse: query => dispatch(fetchResponse(query))
+})
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ChatContainer)

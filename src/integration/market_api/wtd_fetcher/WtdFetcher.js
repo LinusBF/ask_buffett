@@ -8,6 +8,9 @@ const queryString = require("query-string");
 class WtdFetcher{
     constructor(apiKey){
         this.apiKey = apiKey;
+
+        this.getStockRealTime = this.getStockRealTime.bind(this);
+        this.getStockHistorical = this.getStockHistorical.bind(this);
     }
 
     _makeRequest(endPoint, args){
@@ -44,56 +47,73 @@ class WtdFetcher{
     }
 
     _decideStock(wtdData){
-        return new Promise((resolve, reject) =>{
-            if(wtdData.symbols_returned !== undefined){
-                var chosenStock;
-                if(wtdData.symbols_returned === 1){
-                    chosenStock = wtdData.data[0];
-                } else{
-                    chosenStock = this._chooseStockByPrice(wtdData.data, ['USD', 'EUR']);
-                }
-
-                resolve(chosenStock);
+        if(wtdData.symbols_returned !== undefined){
+            var chosenStock;
+            if(wtdData.symbols_returned === 1){
+                chosenStock = wtdData.data[0];
             } else{
-                if(wtdData.Message !== undefined){
-                    reject(Error("Message from WTD: " + wtdData.Message));
-                }else{
-                    reject(Error("NO SYMBOL OR MESSAGE"));
-                }
+                chosenStock = this._chooseStockByPrice(wtdData.data, ['USD', 'EUR']);
             }
-        })
+
+            return chosenStock;
+        } else{
+            if(wtdData.Message !== undefined){
+                console.log(Error("Message from WTD: " + wtdData.Message));
+            }else{
+                console.log(Error("NO SYMBOL OR MESSAGE"));
+            }
+        }
     }
 
-    _handleStock(wtdData, registerResponse, messageFunc, ...messageArgs){
-        console.log(wtdData);
-        this._decideStock(wtdData).then(function (chosenStock) {
-            registerResponse(messageFunc(chosenStock, messageArgs));
-        }).catch(function (err) {
-            console.log(err);
-            registerResponse(WtdMessages.couldNotFindStock());
-        });
+    _processHistory(wtdData){
+        if(wtdData.history !== undefined){
+            var totalOpen = 0;
+            var totalClose = 0;
+            var totalDailyGrowth = 0;
+            var totalVolume = 0;
+
+            for(var date in wtdData.history) {
+                if (!wtdData.history.hasOwnProperty(date)) continue;
+                var dailyData = wtdData.history[date.toString()];
+
+                totalOpen += dailyData.open;
+                totalClose += dailyData.close;
+                totalDailyGrowth += dailyData.close - dailyData.open;
+                totalVolume += dailyData.volume;
+            }
+
+            var nrOfP = wtdData.history.length;
+            return {
+                name: wtdData.name,
+                avgOpen: totalOpen / nrOfP,
+                avgClose: totalClose / nrOfP,
+                avgDailyGrowth: totalDailyGrowth / nrOfP,
+                avgVolume: totalVolume / nrOfP
+            };
+        } else{
+            console.log(Error("NO HISTORICAL DATA"));
+        }
     }
 
-    getStockPrice(symbols, registerResponse){
+    async getStockRealTime(symbols){
         var args = {symbol: symbols.join(",")};
-        var that = this;
-        this._makeRequest("stock", args).then(function (response) {
-            that._handleStock(response, registerResponse, WtdMessages.stockPriceMsg);
-        }).catch(function (err) {
-            console.log(err);
-            registerResponse(WtdMessages.couldNotConnectToAPI());
-        });
+        let stockInfo = await this._makeRequest("stock", args);
+        return this._decideStock(stockInfo);
     }
 
-    getStockCurrency(symbols, registerResponse){
-        var args = {symbol: symbols.join(",")};
-        var that = this;
-        this._makeRequest("stock", args).then(function (response) {
-            that._handleStock(response, registerResponse, WtdMessages.stockCurrencyMsg);
-        }).catch(function (err) {
-            console.log(err);
-            registerResponse(WtdMessages.couldNotConnectToAPI());
-        });
+    async getStockHistorical(symbol, dateStart, dateEnd){
+        const args = {
+            symbol: symbol,
+            date_from: dateStart.toISOString().slice(0, 10),
+            date_to: dateEnd.toISOString().slice(0, 10)
+        };
+        console.log(args);
+
+        let stockInfo = this._getStockRealTime(symbol);
+        console.log(stockInfo);
+        let stockHistory = await this._makeRequest("history", args);
+        console.log(stockHistory);
+        return {stock: stockInfo, history: this._processHistory(stockHistory)};
     }
 }
 
