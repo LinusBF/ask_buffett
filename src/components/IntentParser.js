@@ -3,25 +3,18 @@
  */
 
 export const parseIntent = (intent, content) => {
-    let stock;
-
     switch (intent){
         case "stock_price":
             return priceMsg(content);
         case "stock_currency":
-            stock = content;
             return currencyMsg(content);
         case "stock_information":
-            stock = content;
             return informationMsg(content);
         case "stock_historical_avg":
-            stock = content;
             return historicalAvg(content);
         case "stock_historical_max":
-            stock = content;
             return historicalMax(content);
         case "stock_historical_min":
-            stock = content;
             return historicalMin(content);
     }
 }

@@ -17,8 +17,7 @@ const ChatMessage = (props) => {
     if(data.userContent || data.content.responseData === undefined){
         message = data.content;
     } else{
-        //Calc message from intent
-        message = parseIntent(data.content);
+        message = parseIntent(data.content.intent, data.content.responseData);
     }
 
     return(
