@@ -7,6 +7,10 @@ class WtdMessages{
         return "The current value of " + stock.name + " (" + stock.symbol + ") is " + stock.price + stock.currency + " per stock";
     }
 
+    static stockCurrencyMsg(stock){
+        return "The stock for  " + stock.name + " (" + stock.symbol + ") is traded with " + stock.currency;
+    }
+
     static couldNotFindStock(){
         return "I could not find any stocks with that name, maybe they are listed under a parent company?";
     }

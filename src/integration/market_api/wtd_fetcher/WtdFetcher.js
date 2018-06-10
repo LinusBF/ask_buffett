@@ -25,6 +25,24 @@ class WtdFetcher{
         })
     }
 
+    _chooseStockByPrice(stocksData, currencyPrio){
+        var i = 0;
+        var chosenStock = null;
+        while (i < currencyPrio.length && chosenStock === null){
+            var data = stocksData.slice();
+            var stocksByCur = data.filter((stock) => stock.currency === currencyPrio[i]);
+            if(stocksByCur.length > 0){
+                chosenStock = stocksByCur.reduce((max, stock) => stock.price > max.price ? stock : max, stocksByCur[0]);
+            }
+        }
+
+        if(chosenStock === null){
+            chosenStock = stocksData.reduce((max, stock) => stock.price > max.price ? stock : max, stocksData[0]);
+        }
+
+        return chosenStock;
+    }
+
     _decideStock(wtdData){
         return new Promise((resolve, reject) =>{
             if(wtdData.symbols_returned !== undefined){
@@ -46,42 +64,35 @@ class WtdFetcher{
         })
     }
 
-    _chooseStockByPrice(stocksData, currencyPrio){
-        var i = 0;
-        var chosenStock = null;
-        while (i < currencyPrio.length && chosenStock === null){
-            var data = stocksData.slice();
-            var stocksByCur = data.filter((stock) => stock.currency === currencyPrio[i]);
-            if(stocksByCur.length > 0){
-                chosenStock = stocksByCur.reduce((max, stock) => stock.price > max.price ? stock : max, stocksByCur[0]);
-            }
-        }
-
-        if(chosenStock === null){
-            chosenStock = stocksData.reduce((max, stock) => stock.price > max.price ? stock : max, stocksData[0]);
-        }
-
-        return chosenStock;
+    _handleStock(wtdData, registerResponse, messageFunc, ...messageArgs){
+        console.log(wtdData);
+        this._decideStock(wtdData).then(function (chosenStock) {
+            registerResponse(messageFunc(chosenStock, messageArgs));
+        }).catch(function (err) {
+            console.log(err);
+            registerResponse(WtdMessages.couldNotFindStock());
+        });
     }
 
     getStockPrice(symbols, registerResponse){
         var args = {symbol: symbols.join(",")};
         var that = this;
         this._makeRequest("stock", args).then(function (response) {
-            that.handleStockPrice(response, registerResponse);
+            that._handleStock(response, registerResponse, WtdMessages.stockPriceMsg);
         }).catch(function (err) {
             console.log(err);
             registerResponse(WtdMessages.couldNotConnectToAPI());
         });
     }
 
-    handleStockPrice(wtdData, registerResponse){
-        console.log(wtdData);
-        this._decideStock(wtdData).then(function (chosenStock) {
-            registerResponse(WtdMessages.stockPriceMsg(chosenStock));
+    getStockCurrency(symbols, registerResponse){
+        var args = {symbol: symbols.join(",")};
+        var that = this;
+        this._makeRequest("stock", args).then(function (response) {
+            that._handleStock(response, registerResponse, WtdMessages.stockCurrencyMsg);
         }).catch(function (err) {
             console.log(err);
-            registerResponse(WtdMessages.couldNotFindStock());
+            registerResponse(WtdMessages.couldNotConnectToAPI());
         });
     }
 }
