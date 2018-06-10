@@ -10,6 +10,10 @@ class WtdMessages{
     static couldNotFindStock(){
         return "I could not find any stocks with that name, maybe they are listed under a parent company?";
     }
+
+    static couldNotConnectToAPI(){
+        return "Sorry! I can't reach my friend that has all the financial data :(\n Try again later (API error)";
+    }
 }
 
 export default WtdMessages;

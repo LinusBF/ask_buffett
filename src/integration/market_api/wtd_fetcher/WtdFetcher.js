@@ -8,56 +8,45 @@ const queryString = require("query-string");
 class WtdFetcher{
     constructor(apiKey){
         this.apiKey = apiKey;
-        this.messages = WtdMessages;
-
-        this.decideStock = this.decideStock.bind(this);
     }
 
-    makeRequest(endPoint, args, callback){
-        var request = new XMLHttpRequest();
-        request.open("GET", "https://www.worldtradingdata.com/api/v1/" + endPoint + "?" + queryString.stringify(args) + "&api_token=" + this.apiKey, true);
-        request.onload = function (e) {
-            if (request.readyState === 4 && request.status === 200) {
-                callback(JSON.parse(request.response));
+    _makeRequest(endPoint, args){
+        return new Promise((resolve, reject) =>{
+            var request = new XMLHttpRequest();
+            request.open("GET", "https://www.worldtradingdata.com/api/v1/" + endPoint + "?" + queryString.stringify(args) + "&api_token=" + this.apiKey, true);
+            request.send(null);
+            request.onload = function (e) {
+                if (request.readyState === 4 && request.status === 200) {
+                    resolve(JSON.parse(request.response));
+                } else{
+                    reject(Error(e));
+                }
             }
-        };
-        request.send(null);
+        })
     }
 
-    getStockPrice(symbols, registerResponse){
-        var args = {symbol: symbols.join(",")};
-        this.makeRequest("stock", args, this.handleStockPrice.bind(this, registerResponse));
-    }
-
-    handleStockPrice(registerResponse, wtdData){
-        console.log(wtdData);
-        var that = this;
-        this.decideStock(wtdData).then(function (chosenStock) {
-            registerResponse(that.messages.stockPriceMsg(chosenStock));
-        }).catch(function (err) {
-            console.log(err);
-            registerResponse(that.messages.couldNotFindStock());
-        });
-    }
-
-    decideStock(wtdData){
+    _decideStock(wtdData){
         return new Promise((resolve, reject) =>{
             if(wtdData.symbols_returned !== undefined){
                 var chosenStock;
                 if(wtdData.symbols_returned === 1){
                     chosenStock = wtdData.data[0];
                 } else{
-                    chosenStock = this.chooseStockByPrice(wtdData.data, ['USD', 'EUR']);
+                    chosenStock = this._chooseStockByPrice(wtdData.data, ['USD', 'EUR']);
                 }
 
                 resolve(chosenStock);
             } else{
-                reject(Error("NO SYMBOL"));
+                if(wtdData.Message !== undefined){
+                    reject(Error("Message from WTD: " + wtdData.Message));
+                }else{
+                    reject(Error("NO SYMBOL OR MESSAGE"));
+                }
             }
         })
     }
 
-    chooseStockByPrice(stocksData, currencyPrio){
+    _chooseStockByPrice(stocksData, currencyPrio){
         var i = 0;
         var chosenStock = null;
         while (i < currencyPrio.length && chosenStock === null){
@@ -73,6 +62,27 @@ class WtdFetcher{
         }
 
         return chosenStock;
+    }
+
+    getStockPrice(symbols, registerResponse){
+        var args = {symbol: symbols.join(",")};
+        var that = this;
+        this._makeRequest("stock", args).then(function (response) {
+            that.handleStockPrice(response, registerResponse);
+        }).catch(function (err) {
+            console.log(err);
+            registerResponse(WtdMessages.couldNotConnectToAPI());
+        });
+    }
+
+    handleStockPrice(wtdData, registerResponse){
+        console.log(wtdData);
+        this._decideStock(wtdData).then(function (chosenStock) {
+            registerResponse(WtdMessages.stockPriceMsg(chosenStock));
+        }).catch(function (err) {
+            console.log(err);
+            registerResponse(WtdMessages.couldNotFindStock());
+        });
     }
 }
 
