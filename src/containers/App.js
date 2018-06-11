@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import logo from '../logo.svg';
+import logo from '../images/buffett.png';
 import './App.css';
 
 import ChatContainer from "./ChatContainer";
