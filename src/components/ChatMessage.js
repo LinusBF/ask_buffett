@@ -13,10 +13,10 @@ const ChatMessage = (props) => {
     dateCorrected.setTime(timeZoneCorrected);
 
     let message = "TEMPLATE";
-    if(data.userContent || data.content.responseData === undefined){
+    if(data.userContent){
         message = data.content;
     } else{
-        message = parseIntent(data.content.intent, data.content.responseData);
+        message = parseIntent(data.intent, data.content);
     }
 
     return(

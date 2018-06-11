@@ -4,6 +4,8 @@
 
 export const parseIntent = (intent, content) => {
     switch (intent){
+        case "initial_message":
+            return "Ask Buffett something!";
         case "stock_price":
             return priceMsg(content);
         case "stock_currency":

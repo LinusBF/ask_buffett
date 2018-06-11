@@ -11,7 +11,6 @@ import ChatMessage from "../components/ChatMessage";
 class ChatContainer extends Component{
     constructor(props){
         super(props);
-        this.defaultMsg = <ChatMessage messageData={{content: "Ask Buffett something!", date: new Date(), userContent: false}} />;
         this.handleInput = this.handleInput.bind(this);
     }
 
@@ -41,7 +40,7 @@ class ChatContainer extends Component{
 
         return(
             <React.Fragment>
-                {this.defaultMsg}
+                <ChatMessage messageData={{content: "", intent: "initial_message", date: new Date(), userContent: false}} />
                 {messages}
             </React.Fragment>
         );

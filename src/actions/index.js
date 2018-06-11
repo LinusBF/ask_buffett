@@ -9,7 +9,6 @@ import { getResponse } from '../integration/market_api/MarketApi';
 export const fetchResponse = (query) => {
     return function (dispatch) {
         return getResponse(query).then((response) => {
-            console.log(response);
             dispatch(addResponse(response))
         })
     }
@@ -18,7 +17,8 @@ export const fetchResponse = (query) => {
 export const addResponse = responseData => {
     return {
         type: ADD_RESPONSE,
-        payload: responseData
+        payload: responseData.response,
+        intent: responseData.intent
     }
 }
 

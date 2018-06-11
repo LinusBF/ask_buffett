@@ -12,6 +12,7 @@ const responses = (state = [], action) => {
                 {
                     date: new Date(),
                     content: action.payload,
+                    intent: action.intent,
                     userContent: false
                 }
             ]
