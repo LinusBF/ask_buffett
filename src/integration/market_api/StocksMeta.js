@@ -3,7 +3,7 @@
  */
 
 const parse = require('csv-parse');
-const stocks = "http://linusbf.com/storage/stocklist.csv";
+const stocks = "https://linusbf.com/storage/stocklist.csv";
 
 let StocksMeta = [];
 let request = new XMLHttpRequest();

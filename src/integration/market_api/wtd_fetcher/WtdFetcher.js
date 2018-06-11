@@ -109,12 +109,9 @@ class WtdFetcher{
             date_from: dateStart.toISOString().slice(0, 10),
             date_to: dateEnd.toISOString().slice(0, 10)
         };
-        console.log(args);
 
         let stockInfo = await this.getStockRealTime(symbol);
-        console.log(stockInfo);
         let stockHistory = await this._makeRequest("history", args);
-        console.log(stockHistory);
         return {stock: stockInfo, history: this._processHistory(stockHistory), dates: {from: dateStart, to: dateEnd}};
     }
 }

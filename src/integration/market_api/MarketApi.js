@@ -16,7 +16,7 @@ export async function getResponse(query){
 }
 
 async function _handleWitResponse(witResponse){
-    console.log(witResponse);
+
     if(witResponse.entities.intent === undefined){
         return Error("No intent in user message");
     }
@@ -64,13 +64,13 @@ async function _queryHistoricalData(witResponse, fetcherFunc){
     if(witResponse.entities.datetime !== undefined){
         if(stocks.length > 1) {
             let filteredStocks = _filterStocksByCurrency(stocks, ['USD', 'EUR']);
-            console.log(filteredStocks);
+
             if (filteredStocks.length > 0) {
                 symbols = [];
                 filteredStocks[0].forEach((stock) => symbols.push(stock.symbol));
             }
         }
-        console.log(symbols);
+
         dateStart = new Date(witResponse.entities.datetime[0].from.value.slice(0,10));
         dateEnd = new Date(witResponse.entities.datetime[0].to.value.slice(0,10));
     }

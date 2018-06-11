@@ -6,7 +6,6 @@ import React from 'react';
 import { parseIntent } from "./IntentParser";
 
 const ChatMessage = (props) => {
-    console.log(props);
     const data = props.messageData;
 
     let dateCorrected = new Date(data.date);
