@@ -10,9 +10,16 @@ const wtdFetcher = new WtdFetcher(process.env.REACT_APP_WTD_SECRET);
 
 
 export async function getResponse(query){
-    const witResponse = await getWitResponse(query);
-    const response = await _handleWitResponse(witResponse);
-    return response;
+    return new Promise((resolve, reject) => {
+        getWitResponse(query).then((witResponse) => {
+            return _handleWitResponse(witResponse);
+        }).then((response) => {
+            resolve(response);
+        }).catch((e) => {
+            reject(Error(e));
+        })
+    })
+
 }
 
 async function _handleWitResponse(witResponse){

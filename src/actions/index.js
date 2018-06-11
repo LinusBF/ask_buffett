@@ -10,6 +10,9 @@ export const fetchResponse = (query) => {
     return function (dispatch) {
         return getResponse(query).then((response) => {
             dispatch(addResponse(response))
+        }).catch((e) => {
+            let errorResponse = {response: {error: e}, intent: "fetch_error"};
+            dispatch(addResponse(errorResponse))
         })
     }
 }

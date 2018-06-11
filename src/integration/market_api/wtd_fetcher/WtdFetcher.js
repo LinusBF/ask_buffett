@@ -56,11 +56,13 @@ class WtdFetcher{
 
             return chosenStock;
         } else{
+            let errorMessage;
             if(wtdData.Message !== undefined){
-                console.log(Error("Message from WTD: " + wtdData.Message));
+                errorMessage ="Message from WTD: " + wtdData.Message;
             }else{
-                console.log(Error("NO SYMBOL OR MESSAGE"));
+                errorMessage = "NO SYMBOL OR MESSAGE";
             }
+            throw Error(errorMessage);
         }
     }
 
@@ -100,7 +102,14 @@ class WtdFetcher{
     async getStockRealTime(symbols){
         let args = {symbol: (Array.isArray(symbols) ? symbols.join(",") : symbols)};
         let stockInfo = await this._makeRequest("stock", args);
-        return this._decideStock(stockInfo);
+        let chosenStock;
+        try{
+            chosenStock = this._decideStock(stockInfo);
+        } catch (e){
+            chosenStock = {error: e};
+        }
+
+        return chosenStock;
     }
 
     async getStockHistorical(symbol, dateStart, dateEnd){
@@ -111,6 +120,9 @@ class WtdFetcher{
         };
 
         let stockInfo = await this.getStockRealTime(symbol);
+        if(stockInfo.error !== undefined){
+            return stockInfo;
+        }
         let stockHistory = await this._makeRequest("history", args);
         return {stock: stockInfo, history: this._processHistory(stockHistory), dates: {from: dateStart, to: dateEnd}};
     }
