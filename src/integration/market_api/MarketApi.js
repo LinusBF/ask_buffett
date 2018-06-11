@@ -43,7 +43,7 @@ async function _handleWitResponse(witResponse){
             break;
     }
 
-    return {responseData: await queryFunc(witResponse, fetchFunc), intent: intent};
+    return {response: await queryFunc(witResponse, fetchFunc), intent: intent};
 }
 
 async function _queryRealTimeData(witResponse, fetcherFunc){
