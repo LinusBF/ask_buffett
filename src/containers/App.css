@@ -66,6 +66,16 @@
     text-align: left;
 }
 
+.user-input{
+    font-style: italic;
+    color: #6f6f6f;
+}
+
+.bot-message{
+    font-size: 10pt;
+    font-weight: bold;
+}
+
 .chat-input-container{
     display: flex;
     justify-content: space-between;
