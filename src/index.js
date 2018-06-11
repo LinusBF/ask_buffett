@@ -9,6 +9,7 @@ import App from './containers/App';
 import registerServiceWorker from './registerServiceWorker';
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
+console.log(process.env);
 
 ReactDOM.render(
     <Provider store={store}>

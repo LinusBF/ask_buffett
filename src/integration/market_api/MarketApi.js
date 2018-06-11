@@ -3,11 +3,10 @@
  */
 
 import WtdFetcher from "./wtd_fetcher/WtdFetcher";
-import Secrets from "../../utils/secrets";
 import StocksMeta from "./StocksMeta";
 import { getWitResponse } from "../wit_api/WitApi";
 
-const wtdFetcher = new WtdFetcher(Secrets.Wtd);
+const wtdFetcher = new WtdFetcher(process.env.REACT_APP_WTD_SECRET);
 
 
 export async function getResponse(query){

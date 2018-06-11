@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Ask Buffett",
+  "name": "Ask Buffett about the stock market",
   "icons": [
     {
       "src": "favicon.ico",
