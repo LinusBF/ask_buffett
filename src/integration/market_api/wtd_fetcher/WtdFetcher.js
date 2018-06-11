@@ -14,7 +14,7 @@ class WtdFetcher{
 
     _makeRequest(endPoint, args){
         return new Promise((resolve, reject) =>{
-            var request = new XMLHttpRequest();
+            let request = new XMLHttpRequest();
             request.open("GET", "https://www.worldtradingdata.com/api/v1/" + endPoint + "?" + queryString.stringify(args) + "&api_token=" + this.apiKey, true);
             request.send(null);
             request.onload = function (e) {
@@ -28,11 +28,11 @@ class WtdFetcher{
     }
 
     _chooseStockByPrice(stocksData, currencyPrio){
-        var i = 0;
-        var chosenStock = null;
+        let i = 0;
+        let chosenStock = null;
         while (i < currencyPrio.length && chosenStock === null){
-            var data = stocksData.slice();
-            var stocksByCur = data.filter((stock) => stock.currency === currencyPrio[i]);
+            let data = stocksData.slice();
+            let stocksByCur = data.filter((stock) => stock.currency === currencyPrio[i]);
             if(stocksByCur.length > 0){
                 chosenStock = stocksByCur.reduce((max, stock) => stock.price > max.price ? stock : max, stocksByCur[0]);
             }
@@ -47,7 +47,7 @@ class WtdFetcher{
 
     _decideStock(wtdData){
         if(wtdData.symbols_returned !== undefined){
-            var chosenStock;
+            let chosenStock;
             if(wtdData.symbols_returned === 1){
                 chosenStock = wtdData.data[0];
             } else{
@@ -66,36 +66,39 @@ class WtdFetcher{
 
     _processHistory(wtdData){
         if(wtdData.history !== undefined){
-            var totalOpen = 0;
-            var totalClose = 0;
-            var totalDailyGrowth = 0;
-            var totalVolume = 0;
+            let totalOpen = 0;
+            let totalClose = 0;
+            let totalDailyGrowth = 0;
+            let totalVolume = 0;
 
-            for(var date in wtdData.history) {
+            for(let date in wtdData.history) {
                 if (!wtdData.history.hasOwnProperty(date)) continue;
-                var dailyData = wtdData.history[date.toString()];
+                let dailyData = wtdData.history[date];
 
-                totalOpen += dailyData.open;
-                totalClose += dailyData.close;
-                totalDailyGrowth += dailyData.close - dailyData.open;
-                totalVolume += dailyData.volume;
+                totalOpen += parseFloat(dailyData.open);
+                totalClose += parseFloat(dailyData.close);
+                totalDailyGrowth += parseFloat(dailyData.close) - parseFloat(dailyData.open);
+                totalVolume += parseFloat(dailyData.volume);
             }
 
-            var nrOfP = wtdData.history.length;
+            let nrOfP = Object.keys(wtdData.history).length;
+            let firstClose = parseFloat(wtdData.history[Object.keys(wtdData.history)[0]].close);
+            let lastClose = parseFloat(wtdData.history[Object.keys(wtdData.history)[nrOfP - 1]].close);
             return {
                 name: wtdData.name,
-                avgOpen: totalOpen / nrOfP,
-                avgClose: totalClose / nrOfP,
-                avgDailyGrowth: totalDailyGrowth / nrOfP,
-                avgVolume: totalVolume / nrOfP
-            };
+                avgOpen: (totalOpen / nrOfP),
+                avgClose: (totalClose / nrOfP),
+                avgDailyGrowth: (totalDailyGrowth / nrOfP),
+                avgVolume: (totalVolume / nrOfP),
+                totalGrowth: (firstClose - lastClose)
+            }
         } else{
             console.log(Error("NO HISTORICAL DATA"));
         }
     }
 
     async getStockRealTime(symbols){
-        var args = {symbol: symbols.join(",")};
+        let args = {symbol: (Array.isArray(symbols) ? symbols.join(",") : symbols)};
         let stockInfo = await this._makeRequest("stock", args);
         return this._decideStock(stockInfo);
     }
@@ -108,11 +111,11 @@ class WtdFetcher{
         };
         console.log(args);
 
-        let stockInfo = this._getStockRealTime(symbol);
+        let stockInfo = await this.getStockRealTime(symbol);
         console.log(stockInfo);
         let stockHistory = await this._makeRequest("history", args);
         console.log(stockHistory);
-        return {stock: stockInfo, history: this._processHistory(stockHistory)};
+        return {stock: stockInfo, history: this._processHistory(stockHistory), dates: {from: dateStart, to: dateEnd}};
     }
 }
 
