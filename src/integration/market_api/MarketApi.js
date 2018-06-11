@@ -28,11 +28,15 @@ async function _handleWitResponse(witResponse){
     let fetchFunc;
 
     switch (intent){
-        case "stock_price" || "stock_currency" || "stock_information":
+        case "stock_price":
+        case "stock_currency":
+        case "stock_information":
             queryFunc = _queryRealTimeData;
             fetchFunc = wtdFetcher.getStockRealTime;
             break;
-        case "stock_historical_avg" || "stock_historical_max" || "stock_historical_min":
+        case "stock_historical_avg":
+        case "stock_historical_max":
+        case "stock_historical_min":
             queryFunc = _queryHistoricalData;
             fetchFunc = wtdFetcher.getStockHistorical;
             break;
