@@ -9,8 +9,8 @@ const ChatMessage = (props) => {
     console.log(props);
     const data = props.messageData;
 
-    var dateCorrected = new Date(data.date);
-    var timeZoneCorrected = dateCorrected.getTime() - dateCorrected.getTimezoneOffset()*(1000*60);
+    let dateCorrected = new Date(data.date);
+    let timeZoneCorrected = dateCorrected.getTime() - dateCorrected.getTimezoneOffset()*(1000*60);
     dateCorrected.setTime(timeZoneCorrected);
 
     let message = "TEMPLATE";

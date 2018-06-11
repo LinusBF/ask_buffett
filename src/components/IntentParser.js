@@ -16,6 +16,8 @@ export const parseIntent = (intent, content) => {
             return historicalMax(content);
         case "stock_historical_min":
             return historicalMin(content);
+        default:
+            return "Couldn't understand that sentence, sorry!";
     }
 }
 

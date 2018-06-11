@@ -16,17 +16,17 @@ class ChatContainer extends Component{
     }
 
     orderMessages(){
-        var responses = this.props.responses.slice();
+        let responses = this.props.responses.slice();
         responses.sort((a, b) => b.date.getTime() < a.date.getTime());
-        var inputs = this.props.inputs.slice();
+        let inputs = this.props.inputs.slice();
         inputs.sort((a, b) => b.date.getTime() < a.date.getTime());
 
-        var messageIndex = 0;
+        let messageIndex = 0;
 
-        var messages = inputs.map((input) => {
+        let messages = inputs.map((input) => {
 
             if (responses.length > 0 && responses[0].date.getTime() < input.date.getTime()){
-                var tempRes = responses[0];
+                let tempRes = responses[0];
                 responses.splice(0, 1);
                 messageIndex += 3;
                 return <React.Fragment key={messageIndex - 3}><ChatMessage messageData={tempRes} key={messageIndex - 2} /><ChatMessage messageData={input} key={messageIndex - 1} /></React.Fragment>;

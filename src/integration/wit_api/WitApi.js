@@ -10,7 +10,7 @@ const WitApi = new Wit({
     logger: new log.Logger(log.DEBUG)
 });
 
-export function getWitResponse(query){
+export const getWitResponse = (query) => {
     return WitApi.message(query, {});
 }
 

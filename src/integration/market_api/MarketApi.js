@@ -81,7 +81,7 @@ async function _queryHistoricalData(witResponse, fetcherFunc){
     return await fetcherFunc(symbol, dateStart, dateEnd);
 }
 
-function _getStockSymbols(stockName){
+const _getStockSymbols = stockName => {
     let matchingStocks = StocksMeta.find((stock) => stock.symbol.toLowerCase() === stockName.toLowerCase());
 
     if(matchingStocks === undefined) {
@@ -95,7 +95,7 @@ function _getStockSymbols(stockName){
     return matchingStocks;
 }
 
-function _filterStocksByCurrency(stocks, currencyOrder){
+const _filterStocksByCurrency = (stocks, currencyOrder) => {
     let i = 0;
     const pushStocks = (stock) => stock.cur === currencyOrder[i];
     let filteredStocks = [];
