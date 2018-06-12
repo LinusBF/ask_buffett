@@ -2,6 +2,7 @@
   "name": "ask_buffett",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://ask-buffett-test.herokuapp.com/",
   "dependencies": {
     "node-wit": "^5.0.0",
     "plotly": "^1.0.6",
