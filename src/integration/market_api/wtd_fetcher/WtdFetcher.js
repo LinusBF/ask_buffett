@@ -2,6 +2,7 @@
  * Created by Linus on 2018-06-08.
  */
 import { StockNotFoundError } from "../../../errors/CustomErrors";
+import { Plotly } from "../../Plotly";
 
 const queryString = require("query-string");
 
@@ -73,11 +74,14 @@ class WtdFetcher{
             let totalClose = 0;
             let totalDailyGrowth = 0;
             let totalVolume = 0;
+            let chartData = {x: [], y:[]};
 
             for(let date in wtdData.history) {
                 if (!wtdData.history.hasOwnProperty(date)) continue;
                 let dailyData = wtdData.history[date];
 
+                chartData.x.push(date);
+                chartData.y.push(parseFloat(dailyData.close));
                 totalOpen += parseFloat(dailyData.open);
                 totalClose += parseFloat(dailyData.close);
                 totalDailyGrowth += parseFloat(dailyData.close) - parseFloat(dailyData.open);
@@ -87,13 +91,27 @@ class WtdFetcher{
             let nrOfP = Object.keys(wtdData.history).length;
             let firstClose = parseFloat(wtdData.history[Object.keys(wtdData.history)[0]].close);
             let lastClose = parseFloat(wtdData.history[Object.keys(wtdData.history)[nrOfP - 1]].close);
+
+            var data = [
+                {
+                    x: ["2013-10-04 22:23:00", "2013-11-04 22:23:00", "2013-12-04 22:23:00"],
+                    y: [1, 3, 6],
+                    type: "scatter"
+                }
+            ];
+            var graphOptions = {filename: "date-axes", fileopt: "overwrite"};
+            Plotly.plot(data, graphOptions, function (err, msg) {
+                console.log(msg);
+            });
+
             return {
                 name: wtdData.name,
                 avgOpen: (totalOpen / nrOfP),
                 avgClose: (totalClose / nrOfP),
                 avgDailyGrowth: (totalDailyGrowth / nrOfP),
                 avgVolume: (totalVolume / nrOfP),
-                totalGrowth: (firstClose - lastClose)
+                totalGrowth: (firstClose - lastClose),
+                chart: chartData,
             }
         } else{
             console.log(Error("NO HISTORICAL DATA"));

@@ -2,7 +2,7 @@
  * Created by Linus on 2018-06-10.
  */
 
-export const parseIntent = (intent, content) => {
+export const parseIntent = (intent, content, date=null) => {
     switch (intent){
         case "initial_message":
             return "Ask Buffett something!";
@@ -24,6 +24,8 @@ export const parseIntent = (intent, content) => {
             return historicalMax(content);
         case "stock_historical_min":
             return historicalMin(content);
+        case "stock_chart":
+            return chartMsg(content, date);
         default:
             return "Couldn't understand that sentence, sorry!";
     }
@@ -76,4 +78,8 @@ const historicalMin = (content) => {
     const stock = content.stock;
     const history = content.history;
     return "The stock for  " + stock.name + " (" + stock.symbol + ") is traded with " + stock.currency;
+}
+
+const chartMsg = (content, date) => {
+    return "";
 }
