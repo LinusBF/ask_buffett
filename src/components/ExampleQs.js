@@ -14,6 +14,9 @@ const ExampleQs = (props) => {
             <p>How has Blizzard been doing the last 3 months?</p>
             <p>Highpoint for AAPL the last 3 months?</p>
             <p>Lowpoint for AAPL the last 3 months?</p>
+            <p>What is Blizzard's market cap?</p>
+            <p>What company has ticker AAPL?</p>
+            <p>What is Yahoo's ticker?</p>
             <p>------------------------------------------------------------------</p>
             <p>Support for more questions to come!</p>
         </div>

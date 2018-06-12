@@ -38,6 +38,9 @@ async function _handleWitResponse(witResponse){
         case "stock_price":
         case "stock_currency":
         case "stock_information":
+        case "stock_market_cap":
+        case "stock_name_from_ticker":
+        case "stock_ticker_from_name":
             queryFunc = _queryRealTimeData;
             fetchFunc = wtdFetcher.getStockRealTime;
             break;
@@ -92,8 +95,21 @@ const _getStockSymbols = stockName => {
     let matchingStocks = StocksMeta.find((stock) => stock.symbol.toLowerCase() === stockName.toLowerCase());
 
     if(matchingStocks === undefined) {
-        matchingStocks = StocksMeta.filter(function (stockMeta) {
-            return stockMeta.name.toLowerCase().includes(stockName.toLowerCase());
+        if(stockName.endsWith("'s")){
+            stockName = stockName.slice(0, -2);
+        }
+        if(stockName.endsWith("s")){
+            stockName = stockName.slice(0, -1);
+        }
+        let count = 0;
+        matchingStocks = [];
+        StocksMeta.forEach((stock) => {
+            if(count < 5){
+                if(stock.name.toLowerCase().includes(stockName.toLowerCase())){
+                    matchingStocks.push(stock);
+                    count++;
+                }
+            }
         });
     } else{
         matchingStocks = [matchingStocks];

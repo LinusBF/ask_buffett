@@ -20,6 +20,12 @@ export const parseIntent = (intent, content) => {
             return currencyMsg(content);
         case "stock_information":
             return informationMsg(content);
+        case "stock_market_cap":
+            return marketCap(content);
+        case "stock_name_from_ticker":
+            return nameFromTicker(content);
+        case "stock_ticker_from_name":
+            return tickerFromName(content);
         case "stock_historical_avg":
             return historicalAvg(content);
         case "stock_historical_max":
@@ -57,6 +63,32 @@ const informationMsg = (content) => {
     return "The current value of " + stock.name + " (" + stock.symbol + ") is " + stock.price + stock.currency + " per stock."
         + " Todays change is/was " + stock.day_change + stock.currency + " and it 52-week high was " + stock["52_week_high"] + stock.currency + "."
         + " The company has a market cap of " + mCap(stock.market_cap) + " " + stock.currency;
+}
+
+const marketCap = (content) => {
+    const stock = content;
+    const mCap = (cap) => {
+        if(parseInt(cap) > 999999999){
+            return (parseFloat(cap) / 1000000000).toFixed(3) + "(B)";
+        } else if(cap > 999999){
+            return (parseFloat(cap) / 1000000).toFixed(3) + "(M)";
+        } else if(cap > 999){
+            return (parseFloat(cap) / 1000).toFixed(3) + "(Th)";
+        } else{
+            return parseInt(cap);
+        }
+    }
+    return "The current market cap of " + stock.name + " (" + stock.symbol + ") is "+ mCap(stock.market_cap) + " " + stock.currency;
+}
+
+const nameFromTicker = (content) => {
+    const stock = content;
+    return "The name of the company with ticker " + stock.symbol + " is " + stock.name;
+}
+
+const tickerFromName = (content) => {
+    const stock = content;
+    return stock.name + " has ticker " + stock.symbol;
 }
 
 const historicalAvg = (content) => {
