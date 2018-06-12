@@ -4,6 +4,7 @@
 
 import WtdFetcher from "./wtd_fetcher/WtdFetcher";
 import StocksMeta from "./StocksMeta";
+import { NoIntentError } from "../../errors/CustomErrors";
 import { getWitResponse } from "../wit_api/WitApi";
 
 const wtdFetcher = new WtdFetcher(process.env.REACT_APP_WTD_SECRET);
@@ -16,7 +17,7 @@ export async function getResponse(query){
         }).then((response) => {
             resolve(response);
         }).catch((e) => {
-            reject(Error(e));
+            reject(e);
         })
     })
 
@@ -25,7 +26,7 @@ export async function getResponse(query){
 async function _handleWitResponse(witResponse){
 
     if(witResponse.entities.intent === undefined){
-        return Error("No intent in user message");
+        throw new NoIntentError(Error("No intent in user message"));
     }
     console.log(witResponse.entities.intent[0].value);
     const intent = witResponse.entities.intent[0].value;

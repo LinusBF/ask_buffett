@@ -1,6 +1,7 @@
 /**
  * Created by Linus on 2018-06-08.
  */
+import { StockNotFoundError } from "../../../errors/CustomErrors";
 
 const queryString = require("query-string");
 
@@ -106,7 +107,7 @@ class WtdFetcher{
         try{
             chosenStock = this._decideStock(stockInfo);
         } catch (e){
-            chosenStock = {error: e};
+            throw new StockNotFoundError(e);
         }
 
         return chosenStock;
@@ -120,9 +121,6 @@ class WtdFetcher{
         };
 
         let stockInfo = await this.getStockRealTime(symbol);
-        if(stockInfo.error !== undefined){
-            return stockInfo;
-        }
         let stockHistory = await this._makeRequest("history", args);
         return {stock: stockInfo, history: this._processHistory(stockHistory), dates: {from: dateStart, to: dateEnd}};
     }

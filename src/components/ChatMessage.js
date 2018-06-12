@@ -19,7 +19,7 @@ const ChatMessage = (props) => {
         if(data.content.error === undefined){
             message = parseIntent(data.intent, data.content);
         } else{
-            message = parseIntent("error_message", data.content);
+            message = parseIntent(data.intent, data.content);
         }
     }
 

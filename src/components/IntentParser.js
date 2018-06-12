@@ -8,8 +8,10 @@ export const parseIntent = (intent, content) => {
             return "Ask Buffett something!";
         case "fetch_error":
             return "Buffett couldn't be reached at this time, try again later. (Network error)";
-        case "error_message":
+        case "stock_not_find":
             return "Couldn't find any stocks with that name";
+        case "no_intent":
+            return "Couldn't understand that sentence, sorry!";
         case "stock_price":
             return priceMsg(content);
         case "stock_currency":
