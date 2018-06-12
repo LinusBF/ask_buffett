@@ -1,7 +1,7 @@
 /**
  * Created by Linus on 2018-06-08.
  */
-import { StockNotFoundError } from "../../../errors/CustomErrors";
+import { StockNotFoundError, StockHistoryNotAvailableError } from "../../../errors/CustomErrors";
 
 const queryString = require("query-string");
 
@@ -73,14 +73,21 @@ class WtdFetcher{
             let totalClose = 0;
             let totalDailyGrowth = 0;
             let totalVolume = 0;
+            let minClose = {date: null, value: Number.MAX_VALUE};
+            let maxClose = {date: null, value: 0};
 
             for(let date in wtdData.history) {
                 if (!wtdData.history.hasOwnProperty(date)) continue;
                 let dailyData = wtdData.history[date];
 
-                totalOpen += parseFloat(dailyData.open);
-                totalClose += parseFloat(dailyData.close);
-                totalDailyGrowth += parseFloat(dailyData.close) - parseFloat(dailyData.open);
+                let openValue = parseFloat(dailyData.open);
+                let closeValue = parseFloat(dailyData.close);
+
+                minClose = (closeValue < minClose.value ? {date: date, value: closeValue} : minClose);
+                maxClose = (closeValue > maxClose.value ? {date: date, value: closeValue} : maxClose);
+                totalOpen += openValue;
+                totalClose += closeValue;
+                totalDailyGrowth += closeValue - openValue;
                 totalVolume += parseFloat(dailyData.volume);
             }
 
@@ -93,10 +100,12 @@ class WtdFetcher{
                 avgClose: (totalClose / nrOfP),
                 avgDailyGrowth: (totalDailyGrowth / nrOfP),
                 avgVolume: (totalVolume / nrOfP),
-                totalGrowth: (firstClose - lastClose)
+                totalGrowth: (firstClose - lastClose),
+                minClose: minClose,
+                maxClose: maxClose
             }
         } else{
-            console.log(Error("NO HISTORICAL DATA"));
+            throw Error("NO HISTORICAL DATA");
         }
     }
 
@@ -122,7 +131,13 @@ class WtdFetcher{
 
         let stockInfo = await this.getStockRealTime(symbol);
         let stockHistory = await this._makeRequest("history", args);
-        return {stock: stockInfo, history: this._processHistory(stockHistory), dates: {from: dateStart, to: dateEnd}};
+        let processedHistory;
+        try{
+            processedHistory = this._processHistory(stockHistory);
+        }catch (e){
+            throw new StockHistoryNotAvailableError(e);
+        }
+        return {stock: stockInfo, history: processedHistory, dates: {from: dateStart, to: dateEnd}};
     }
 }
 

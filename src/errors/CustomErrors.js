@@ -13,3 +13,9 @@ export const StockNotFoundError = (error) => {
     this.error = error;
     return this;
 }
+
+export const StockHistoryNotAvailableError = (error) => {
+    this.intent = "no_stock_history";
+    this.error = error;
+    return this;
+}

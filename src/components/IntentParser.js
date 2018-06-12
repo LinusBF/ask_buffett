@@ -10,6 +10,8 @@ export const parseIntent = (intent, content) => {
             return "Buffett couldn't be reached at this time, try again later. (Network error)";
         case "stock_not_find":
             return "Couldn't find any stocks with that name";
+        case "no_stock_history":
+            return "Couldn't find any historical data on that stock, sorry!";
         case "no_intent":
             return "Couldn't understand that sentence, sorry!";
         case "stock_price":
@@ -69,11 +71,17 @@ const historicalAvg = (content) => {
 const historicalMax = (content) => {
     const stock = content.stock;
     const history = content.history;
-    return stock.name + " (" + stock.symbol + ") is traded with " + stock.currency;
+    const dates = content.dates;
+    return stock.name + " (" + stock.symbol + ") was at its highest point on " + history.maxClose.date
+        + " where it reached " + history.maxClose.value + stock.currency + "."
+        + " (Period " + dates.from.toISOString().slice(0, 10) + " - " + dates.to.toISOString().slice(0, 10) + ")";
 }
 
 const historicalMin = (content) => {
     const stock = content.stock;
     const history = content.history;
-    return "The stock for  " + stock.name + " (" + stock.symbol + ") is traded with " + stock.currency;
+    const dates = content.dates;
+    return stock.name + " (" + stock.symbol + ") was at its lowest point on " + history.minClose.date
+        + " where it reached " + history.minClose.value + stock.currency + "."
+        + " (Period " + dates.from.toISOString().slice(0, 10) + " - " + dates.to.toISOString().slice(0, 10) + ")";
 }

@@ -12,6 +12,8 @@ const ExampleQs = (props) => {
             <p>What currency does Eniro use?</p>
             <p>General Motors stock info?</p>
             <p>How has Blizzard been doing the last 3 months?</p>
+            <p>Highpoint for AAPL the last 3 months?</p>
+            <p>Lowpoint for AAPL the last 3 months?</p>
             <p>------------------------------------------------------------------</p>
             <p>Support for more questions to come!</p>
         </div>
