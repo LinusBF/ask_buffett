@@ -3,6 +3,7 @@ import logo from '../images/buffett.png';
 import './App.css';
 
 import ChatContainer from "./ChatContainer";
+import ExampleQs from "../components/ExampleQs";
 
 class App extends Component {
     render() {
@@ -13,6 +14,7 @@ class App extends Component {
                     <h1 className="App-title">Ask Buffett about the stock market!</h1>
                 </header>
                 <ChatContainer/>
+                <ExampleQs />
             </div>
         );
     }
