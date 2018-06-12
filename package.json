@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "csv-parse": "^2.5.0",
     "node-wit": "^5.0.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
