@@ -3,7 +3,7 @@
  */
 import { StockNotFoundError, StockHistoryNotAvailableError } from "../../../errors/CustomErrors";
 
-const queryString = require("query-string");
+const queryString = require("querystring");
 
 class WtdFetcher{
     constructor(apiKey){
@@ -110,7 +110,7 @@ class WtdFetcher{
     }
 
     async getStockRealTime(symbols){
-        let args = {symbol: (Array.isArray(symbols) ? symbols.join(",") : symbols)};
+        let args = {symbol: symbols};
         let stockInfo = await this._makeRequest("stock", args);
         let chosenStock;
         try{
