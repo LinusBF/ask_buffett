@@ -54,8 +54,10 @@ class ChatContainer extends Component{
     render() {
         return(
             <div className="chat-container">
-                <div className="messages-container">
-                    {this.orderMessages()}
+                <div id="scollbar-style" className="messages-container">
+                    <div className="messages-box">
+                        {this.orderMessages()}
+                    </div>
                 </div>
                 <div className="chat-input-container">
                     <ChatInput sendInput={this.handleInput} />
