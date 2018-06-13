@@ -11,7 +11,7 @@ import ChatMessage from "../components/ChatMessage";
 class ChatContainer extends Component{
     constructor(props){
         super(props);
-        this.handleInput = this.handleInput.bind(this);
+        this._handleInput = this._handleInput.bind(this);
     }
 
     _orderMessages(){

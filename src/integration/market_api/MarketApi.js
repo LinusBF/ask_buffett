@@ -10,7 +10,7 @@ import { getWitResponse } from "../wit_api/WitApi";
 const wtdFetcher = new WtdFetcher(process.env.REACT_APP_WTD_SECRET);
 
 
-export async const getResponse = (query) => {
+export const getResponse = async (query) => {
     return new Promise((resolve, reject) => {
         getWitResponse(query).then((witResponse) => {
             return _handleWitResponse(witResponse);
@@ -23,7 +23,7 @@ export async const getResponse = (query) => {
 
 };
 
-const _handleWitResponse = async function(witResponse) => {
+const _handleWitResponse = async (witResponse) => {
 
     if(witResponse.entities.intent === undefined){
         throw new NoIntentError(Error("No intent in user message"));
@@ -57,7 +57,7 @@ const _handleWitResponse = async function(witResponse) => {
     return {response: await queryFunc(witResponse, fetchFunc), intent: intent};
 };
 
-const _queryRealTimeData = async function(witResponse, fetcherFunc) => {
+const _queryRealTimeData = async (witResponse, fetcherFunc) => {
     let stocks = _getStockSymbols(witResponse.entities.search_query[0].value);
     let symbols = [];
     stocks.forEach((stock) => symbols.push(stock.symbol));
@@ -65,7 +65,7 @@ const _queryRealTimeData = async function(witResponse, fetcherFunc) => {
     return await fetcherFunc(symbols);
 };
 
-const _queryHistoricalData = async function(witResponse, fetcherFunc) => {
+const _queryHistoricalData = async (witResponse, fetcherFunc) => {
     let stocks = _getStockSymbols(witResponse.entities.search_query[0].value);
     let dateStart = null;
     let dateEnd = null;
