@@ -67,7 +67,7 @@ class WtdFetcher{
         }
     }
 
-    _processHistory(wtdData){
+    _processStockHistory(wtdData){
         if(wtdData.history !== undefined){
             let totalOpen = 0;
             let totalClose = 0;
@@ -133,7 +133,7 @@ class WtdFetcher{
         let stockHistory = await this._makeRequest("history", args);
         let processedHistory;
         try{
-            processedHistory = this._processHistory(stockHistory);
+            processedHistory = this._processStockHistory(stockHistory);
         }catch (e){
             throw new StockHistoryNotAvailableError(e);
         }

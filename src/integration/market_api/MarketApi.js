@@ -10,7 +10,7 @@ import { getWitResponse } from "../wit_api/WitApi";
 const wtdFetcher = new WtdFetcher(process.env.REACT_APP_WTD_SECRET);
 
 
-export async function getResponse(query){
+export async const getResponse = (query) => {
     return new Promise((resolve, reject) => {
         getWitResponse(query).then((witResponse) => {
             return _handleWitResponse(witResponse);
@@ -21,9 +21,9 @@ export async function getResponse(query){
         })
     })
 
-}
+};
 
-async function _handleWitResponse(witResponse){
+const _handleWitResponse = async function(witResponse) => {
 
     if(witResponse.entities.intent === undefined){
         throw new NoIntentError(Error("No intent in user message"));
@@ -55,17 +55,17 @@ async function _handleWitResponse(witResponse){
     }
 
     return {response: await queryFunc(witResponse, fetchFunc), intent: intent};
-}
+};
 
-async function _queryRealTimeData(witResponse, fetcherFunc){
+const _queryRealTimeData = async function(witResponse, fetcherFunc) => {
     let stocks = _getStockSymbols(witResponse.entities.search_query[0].value);
     let symbols = [];
     stocks.forEach((stock) => symbols.push(stock.symbol));
 
     return await fetcherFunc(symbols);
-}
+};
 
-async function _queryHistoricalData(witResponse, fetcherFunc){
+const _queryHistoricalData = async function(witResponse, fetcherFunc) => {
     let stocks = _getStockSymbols(witResponse.entities.search_query[0].value);
     let dateStart = null;
     let dateEnd = null;
@@ -89,7 +89,7 @@ async function _queryHistoricalData(witResponse, fetcherFunc){
     let symbol = symbols[0]; //Historical fetches can only handle one symbol
 
     return await fetcherFunc(symbol, dateStart, dateEnd);
-}
+};
 
 const _getStockSymbols = stockName => {
     let matchingStocks = StocksMeta.find((stock) => stock.symbol.toLowerCase() === stockName.toLowerCase());
@@ -116,7 +116,7 @@ const _getStockSymbols = stockName => {
     }
 
     return matchingStocks;
-}
+};
 
 const _filterStocksByCurrency = (stocks, currencyOrder) => {
     let i = 0;
@@ -129,4 +129,4 @@ const _filterStocksByCurrency = (stocks, currencyOrder) => {
     }
 
     return filteredStocks;
-}
+};

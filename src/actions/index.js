@@ -20,7 +20,7 @@ export const fetchResponse = (query) => {
             dispatch(addResponse(errorResponse))
         })
     }
-}
+};
 
 export const addResponse = responseData => {
     return {
@@ -28,12 +28,12 @@ export const addResponse = responseData => {
         payload: responseData.response,
         intent: responseData.intent
     }
-}
+};
 
 export const addInput = inputData => {
     return {
         type: ADD_INPUT,
         payload: inputData
     }
-}
+};
 

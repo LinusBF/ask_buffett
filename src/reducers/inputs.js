@@ -18,6 +18,6 @@ const inputs = (state = [], action) => {
         default:
             return state
     }
-}
+};
 
 export default inputs

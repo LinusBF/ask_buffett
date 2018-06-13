@@ -8,4 +8,4 @@ import inputs from './inputs';
 export default combineReducers({
     responses,
     inputs
-})
+});

@@ -8,6 +8,7 @@ import { parseIntent } from "./IntentParser";
 const ChatMessage = (props) => {
     const data = props.messageData;
 
+    //Correct date after local time zone
     let dateCorrected = new Date(data.date);
     let timeZoneCorrected = dateCorrected.getTime() - dateCorrected.getTimezoneOffset()*(1000*60);
     dateCorrected.setTime(timeZoneCorrected);
@@ -16,11 +17,7 @@ const ChatMessage = (props) => {
     if(data.userContent){
         message = data.content;
     } else{
-        if(data.content.error === undefined){
-            message = parseIntent(data.intent, data.content);
-        } else{
-            message = parseIntent(data.intent, data.content);
-        }
+        message = parseIntent(data.intent, data.content);
     }
 
     return(

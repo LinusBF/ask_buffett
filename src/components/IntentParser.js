@@ -35,61 +35,52 @@ export const parseIntent = (intent, content) => {
         default:
             return "Couldn't understand that sentence, sorry!";
     }
-}
+};
+
+const mCap = (cap) => {
+    const parsedCap = parseFloat(cap);
+    if(parsedCap > 999999999){
+        return (parsedCap / 1000000000).toFixed(3) + "(B)";
+    } else if(cap > 999999){
+        return (parsedCap / 1000000).toFixed(3) + "(M)";
+    } else if(cap > 999){
+        return (parsedCap / 1000).toFixed(3) + "(Th)";
+    } else{
+        return parseInt(cap);
+    }
+};
 
 const priceMsg = (content) => {
     const stock = content;
     return "The current value of " + stock.name + " (" + stock.symbol + ") is " + stock.price + stock.currency + " per stock";
-}
+};
 
 const currencyMsg = (content) => {
     const stock = content;
     return "The stock for  " + stock.name + " (" + stock.symbol + ") is traded with " + stock.currency;
-}
+};
 
 const informationMsg = (content) => {
     const stock = content;
-    const mCap = (cap) => {
-        if(parseInt(cap) > 999999999){
-            return (parseFloat(cap) / 1000000000).toFixed(3) + "(B)";
-        } else if(cap > 999999){
-            return (parseFloat(cap) / 1000000).toFixed(3) + "(M)";
-        } else if(cap > 999){
-            return (parseFloat(cap) / 1000).toFixed(3) + "(Th)";
-        } else{
-            return parseInt(cap);
-        }
-    }
     return "The current value of " + stock.name + " (" + stock.symbol + ") is " + stock.price + stock.currency + " per stock."
         + " Todays change is/was " + stock.day_change + stock.currency + " and it 52-week high was " + stock["52_week_high"] + stock.currency + "."
         + " The company has a market cap of " + mCap(stock.market_cap) + " " + stock.currency;
-}
+};
 
 const marketCap = (content) => {
     const stock = content;
-    const mCap = (cap) => {
-        if(parseInt(cap) > 999999999){
-            return (parseFloat(cap) / 1000000000).toFixed(3) + "(B)";
-        } else if(cap > 999999){
-            return (parseFloat(cap) / 1000000).toFixed(3) + "(M)";
-        } else if(cap > 999){
-            return (parseFloat(cap) / 1000).toFixed(3) + "(Th)";
-        } else{
-            return parseInt(cap);
-        }
-    }
     return "The current market cap of " + stock.name + " (" + stock.symbol + ") is "+ mCap(stock.market_cap) + " " + stock.currency;
-}
+};
 
 const nameFromTicker = (content) => {
     const stock = content;
     return "The name of the company with ticker " + stock.symbol + " is " + stock.name;
-}
+};
 
 const tickerFromName = (content) => {
     const stock = content;
     return stock.name + " has ticker " + stock.symbol;
-}
+};
 
 const historicalAvg = (content) => {
     const stock = content.stock;
@@ -98,7 +89,7 @@ const historicalAvg = (content) => {
     return stock.name + " (" + stock.symbol + ") had a growth of " + history.totalGrowth.toFixed(2) + stock.currency
         + " and had an average daily growth of " + history.avgDailyGrowth.toFixed(2) + stock.currency + "\n"
         + "(Period " + dates.from.toISOString().slice(0, 10) + " - " + dates.to.toISOString().slice(0, 10) + ")";
-}
+};
 
 const historicalMax = (content) => {
     const stock = content.stock;
@@ -107,7 +98,7 @@ const historicalMax = (content) => {
     return stock.name + " (" + stock.symbol + ") was at its highest point on " + history.maxClose.date
         + " where it reached " + history.maxClose.value + stock.currency + "."
         + " (Period " + dates.from.toISOString().slice(0, 10) + " - " + dates.to.toISOString().slice(0, 10) + ")";
-}
+};
 
 const historicalMin = (content) => {
     const stock = content.stock;
@@ -116,4 +107,4 @@ const historicalMin = (content) => {
     return stock.name + " (" + stock.symbol + ") was at its lowest point on " + history.minClose.date
         + " where it reached " + history.minClose.value + stock.currency + "."
         + " (Period " + dates.from.toISOString().slice(0, 10) + " - " + dates.to.toISOString().slice(0, 10) + ")";
-}
+};

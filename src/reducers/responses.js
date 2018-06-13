@@ -19,6 +19,6 @@ const responses = (state = [], action) => {
         default:
             return state
     }
-}
+};
 
 export default responses

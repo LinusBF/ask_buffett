@@ -21,6 +21,6 @@ const ExampleQs = (props) => {
             <p>Support for more questions to come!</p>
         </div>
     );
-}
+};
 
 export default ExampleQs;

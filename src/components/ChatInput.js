@@ -12,22 +12,22 @@ class ChatInput extends Component {
             query: "",
         };
 
-        this.handleClick = this.handleClick.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleEnterPress = this.handleEnterPress.bind(this);
+        this._handleClick = this._handleClick.bind(this);
+        this._handleChange = this._handleChange.bind(this);
+        this._handleEnterPress = this._handleEnterPress.bind(this);
     }
 
-    handleChange({ target }) {
+    _handleChange({ target }) {
         this.setState({query: target.value});
     }
 
-    handleEnterPress(event){
+    _handleEnterPress(event){
         if(event.key === 'Enter'){
-            this.handleClick();
+            this._handleClick();
         }
     }
 
-    handleClick(){
+    _handleClick(){
         if(this.state.query !== "") {
             this.props.sendInput(this.state.query);
             this.setState({query: ""});
@@ -37,8 +37,8 @@ class ChatInput extends Component {
     render() {
         return (
             <React.Fragment>
-                <input type="text" name="query" placeholder="Write a message to the bot!" value={this.state.query} onChange={this.handleChange} onKeyPress={this.handleEnterPress} />
-                <button className="btn btn-primary" onClick={this.handleClick}>Ask Buffett</button>
+                <input type="text" name="query" placeholder="Write a message to the bot!" value={this.state.query} onChange={this._handleChange} onKeyPress={this._handleEnterPress} />
+                <button className="btn btn-primary" onClick={this._handleClick}>Ask Buffett</button>
             </React.Fragment>
         );
     }

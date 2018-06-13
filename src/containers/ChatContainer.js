@@ -14,7 +14,7 @@ class ChatContainer extends Component{
         this.handleInput = this.handleInput.bind(this);
     }
 
-    orderMessages(){
+    _orderMessages(){
         let responses = this.props.responses.slice();
         responses.sort((a, b) => b.date.getTime() < a.date.getTime());
         let inputs = this.props.inputs.slice();
@@ -22,6 +22,8 @@ class ChatContainer extends Component{
 
         let messageIndex = 0;
 
+        //For each input from the user, check for an earlier response and return the appropriate react elements
+        //Could be optimized/redesigned
         let messages = inputs.map((input) => {
 
             if (responses.length > 0 && responses[0].date.getTime() < input.date.getTime()){
@@ -34,6 +36,7 @@ class ChatContainer extends Component{
             return <ChatMessage messageData={input} key={messageIndex - 1} />;
         });
 
+        //Add the latest response, if there is one
         if (responses.length > 0){
             messages.push(<ChatMessage messageData={responses[0]} key={messageIndex} />);
         }
@@ -46,7 +49,7 @@ class ChatContainer extends Component{
         );
     }
 
-    handleInput(query){
+    _handleInput(query){
         this.props.fetchResponse(query);
         this.props.addInput(query);
     }
@@ -56,11 +59,11 @@ class ChatContainer extends Component{
             <div className="chat-container">
                 <div id="scollbar-style" className="messages-container">
                     <div className="messages-box">
-                        {this.orderMessages()}
+                        {this._orderMessages()}
                     </div>
                 </div>
                 <div className="chat-input-container">
-                    <ChatInput sendInput={this.handleInput} />
+                    <ChatInput sendInput={this._handleInput} />
                 </div>
             </div>
         );
