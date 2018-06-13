@@ -18,6 +18,7 @@ const ExampleQs = (props) => {
             <p>What company has ticker AAPL?</p>
             <p>What is Yahoo's ticker?</p>
             <p>------------------------------------------------------------------</p>
+            <p>If Buffett can't find the stock name, try avoiding using<br />capital letters besides the company name</p>
             <p>Support for more questions to come!</p>
         </div>
     );
